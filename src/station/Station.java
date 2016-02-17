@@ -10,19 +10,18 @@ import java.util.ArrayList;
 public class Station {
     private int id;
     private ArrayList<Station> neighbors;
-    private ArrayList<Tramline> belongsToLines;
+    private ArrayList<Tramline> tramlines;
 
     public Station(int id,
                    ArrayList<Station> neighborIds,
                    ArrayList<Tramline> tramlines) {
         this.id = id;
         this.neighbors = neighborIds;
-        this.belongsToLines = tramlines;
+        this.tramlines = tramlines;
     }
 
-
-    public boolean hasNeighborWithId(Integer potentialNeighbourId) {
-        return this.neighbors.contains(potentialNeighbourId);
+     public boolean hasNeighborWithId(Station potentialNeighbour) {
+        return this.neighbors.contains(potentialNeighbour);
     }
 
     //region getter and setter
@@ -34,8 +33,8 @@ public class Station {
         return neighbors;
     }
 
-    public ArrayList<Tramline> getBelongsToLines() {
-        return belongsToLines;
+    public ArrayList<Tramline> getTramlines() {
+        return tramlines;
     }
 
     //endregion getter and setter
