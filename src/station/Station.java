@@ -9,15 +9,18 @@ import java.util.ArrayList;
  */
 public class Station {
     private int id;
-    private ArrayList<Station> neighbors;
-    private ArrayList<Tramline> tramlines;
+    private int zone;
+    private String name;
+    private boolean endstation;
+    private ArrayList<Integer> lines;
+    private ArrayList<Integer> neighbors;
 
     public Station(int id,
-                   ArrayList<Station> neighborIds,
-                   ArrayList<Tramline> tramlines) {
+                   ArrayList<Integer> neighborIds,
+                   ArrayList<Integer> tramlines) {
         this.id = id;
         this.neighbors = neighborIds;
-        this.tramlines = tramlines;
+        this.lines = tramlines;
     }
 
      public boolean hasNeighborWithId(Station potentialNeighbour) {
@@ -25,17 +28,31 @@ public class Station {
     }
 
     //region getter and setter
+
     public int getId() {
         return id;
     }
 
-    public ArrayList<Station> getNeighbors() {
+    public int getZone() {
+        return zone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isEndstation() {
+        return endstation;
+    }
+
+    public ArrayList<Integer> getLines() {
+        return lines;
+    }
+
+    public ArrayList<Integer> getNeighbors() {
         return neighbors;
     }
 
-    public ArrayList<Tramline> getTramlines() {
-        return tramlines;
-    }
 
     //endregion getter and setter
 
