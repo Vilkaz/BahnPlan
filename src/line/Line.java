@@ -1,12 +1,12 @@
-package tramline;
+package line;
 
 /**
  * Created by Vilkaz on 17.02.2016.
  */
-public class Tramline {
+public class Line {
     private int id;
 
-    public Tramline(int id){
+    public Line(int id){
         this.id = id;
     }
 
