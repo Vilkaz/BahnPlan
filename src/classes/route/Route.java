@@ -1,6 +1,6 @@
-package route;
+package classes.route;
 
-import station.Station;
+import classes.station.Station;
 
 import java.util.ArrayList;
 
