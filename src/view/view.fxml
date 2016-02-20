@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ViewController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="Datei">
+            <items>
+                  <MenuItem fx:id="menuNew" mnemonicParsing="false" text="neues Projekt" />
+                  <MenuItem fx:id="manueOpen" mnemonicParsing="false" text="Projekt öffnen" />
+                  <MenuItem fx:id="menuSave" mnemonicParsing="false" text="Projekt speichern" />
+              <MenuItem fx:id="manuClose" mnemonicParsing="false" text="Programm schliessen" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
+         <children>
+             <RadioButton mnemonicParsing="false" selected="true" text="Kunde">
+               <toggleGroup>
+                  <ToggleGroup fx:id="user" />
+               </toggleGroup>
+             </RadioButton>
+            <RadioButton fx:id="adminBtn" mnemonicParsing="false" onAction="#startMouseListener" text="Admin" toggleGroup="$user" />
+         </children>
+      </HBox>
+      <Pane id="contentPane" prefHeight="550.0" prefWidth="1000.0" />
+      <Pane id="infoPane" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <TextField prefHeight="125.0" prefWidth="1000.0" text="Hier werden verschiedene Infos stehen wie z.B.  &quot;bitte klicken Sie auf die Station, von der Sie losfahren möchten&quot;" />
+         </children>
+      </Pane>
+   </children>
+</VBox>

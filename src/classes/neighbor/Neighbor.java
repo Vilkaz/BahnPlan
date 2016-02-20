@@ -1,4 +1,4 @@
-package neighbor;
+package classes.neighbor;
 
 /**
  * Created by Vilkaz on 19.02.2016.

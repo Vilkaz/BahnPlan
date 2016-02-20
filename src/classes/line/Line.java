@@ -1,4 +1,4 @@
-package line;
+package classes.line;
 
 /**
  * Created by Vilkaz on 17.02.2016.

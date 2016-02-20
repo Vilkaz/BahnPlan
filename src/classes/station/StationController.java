@@ -1,6 +1,6 @@
-package station;
+package classes.station;
 
-import neighbor.Neighbor;
+import classes.line.neighbor.Neighbor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,7 @@ public class StationController {
     /** hier sind mockup stations, hab versucht
      * die linie 1-2-3 von Rinnes tabelle umzuwandeln, mit unterschiedlichen längen,
      * die IDs sind wie folgt gebaut = [LinienNummer][zweistellige Stations nummer(01 02 03 usw]
-     * Somit ergeben sich IDs wie 101, 201 usw. Sinn = sonst wäre (linie 1, station 11) gleich wie (Linie 11 station 1)
+     * Somit ergeben sich IDs wie 101, 201 usw. Sinn = sonst wäre (linie 1, classes.station 11) gleich wie (Linie 11 classes.station 1)
      * um jetzt sowas zu erzeugen, muss eine linie mehr als 100 Stationen haben (Linie1, Station 101) wäre gleich (Linie 11, Station 01)
      * Diese Sicherheit reicht für unser Feldversuch dicke aus.
      */
