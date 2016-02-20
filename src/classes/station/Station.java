@@ -1,6 +1,6 @@
 package classes.station;
 
-import classes.line.neighbor.Neighbor;
+import classes.neighbor.Neighbor;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class Station {
 
     /**
      *
-     * Constructor for calculating route and price
+     * Constructor for calculating classes.route and price
      *
       * @param id
      * @param zone

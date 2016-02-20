@@ -1,6 +1,6 @@
 package classes.station;
 
-import classes.line.neighbor.Neighbor;
+import classes.neighbor.Neighbor;
 
 import java.util.ArrayList;
 import java.util.Arrays;

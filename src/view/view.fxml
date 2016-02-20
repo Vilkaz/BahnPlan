@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ViewController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.ViewController">
    <children>
       <MenuBar>
         <menus>
@@ -21,7 +21,7 @@
       </MenuBar>
       <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
          <children>
-             <RadioButton mnemonicParsing="false" selected="true" text="Kunde">
+             <RadioButton fx:id="clientBtn" mnemonicParsing="false" onAction="#startClientMouseListener" selected="true" text="Kunde">
                <toggleGroup>
                   <ToggleGroup fx:id="user" />
                </toggleGroup>
@@ -29,10 +29,10 @@
             <RadioButton fx:id="adminBtn" mnemonicParsing="false" onAction="#startMouseListener" text="Admin" toggleGroup="$user" />
          </children>
       </HBox>
-      <Pane id="contentPane" prefHeight="550.0" prefWidth="1000.0" />
+      <Pane id="contentPane" fx:id="contentPane" prefHeight="550.0" prefWidth="1000.0" styleClass="contentPane" />
       <Pane id="infoPane" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <TextField prefHeight="125.0" prefWidth="1000.0" text="Hier werden verschiedene Infos stehen wie z.B.  &quot;bitte klicken Sie auf die Station, von der Sie losfahren möchten&quot;" />
+            <TextField fx:id="infoTF" prefHeight="125.0" prefWidth="1000.0" text="Hier werden verschiedene Infos stehen wie z.B.  &quot;bitte klicken Sie auf die Station, von der Sie losfahren möchten&quot;" />
          </children>
       </Pane>
    </children>
