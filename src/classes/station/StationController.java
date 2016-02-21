@@ -24,9 +24,9 @@ public class StationController {
          * as we work with integer ans id, we can't make it "000"
          */
         stations.add(new Station(0,1,false, new ArrayList<Neighbor>(Arrays.asList(
-                new Neighbor(101, 1),
-                new Neighbor(201, 3),
-                new Neighbor(301, 2)
+                new Neighbor(1, 101),
+                new Neighbor(3, 201),
+                new Neighbor(2, 301)
         ))));
 
         stations.add(new Station(101, 2, false,
@@ -38,25 +38,25 @@ public class StationController {
         stations.add(new Station(102, 2, false,
                 new ArrayList<Neighbor>(Arrays.asList(
                         new Neighbor(2, 101),
-                        new Neighbor(1,103)))));
+                        new Neighbor(1, 103)))));
 
         stations.add(new Station(103, 1, false,
                 new ArrayList<Neighbor>(Arrays.asList(
                         new Neighbor(1, 102),
-                        new Neighbor(3,104),
+                        new Neighbor(3, 104),
                         new Neighbor(4, 203)))));
 
         stations.add(new Station(104, 2, false,
                 new ArrayList<Neighbor>(Arrays.asList(
                         new Neighbor(3, 103),
-                        new Neighbor(1,105)))));
+                        new Neighbor(1, 105)))));
 
-        stations.add(new Station(104, 2, false,
+        stations.add(new Station(105, 2, false,
                 new ArrayList<Neighbor>(Arrays.asList(
                         new Neighbor(1, 104),
-                        new Neighbor(1,106)))));
+                        new Neighbor(1, 106)))));
 
-        stations.add(new Station(104, 2, true,
+        stations.add(new Station(106, 2, true,
                 new ArrayList<Neighbor>(Arrays.asList(
                         new Neighbor(1, 105)))));
 

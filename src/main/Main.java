@@ -1,5 +1,6 @@
 package main;
 
+import classes.route.Route;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,6 +11,7 @@ import classes.station.StationController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Main extends Application {
 
@@ -18,44 +20,73 @@ public class Main extends Application {
 
         ArrayList<Station> Route = new ArrayList<Station>();
 
-        ArrayList<Integer> distance = new ArrayList<Integer>();
-        ArrayList<Station> vorgänger = new ArrayList<Station>();
-
         // gehe alle Knoten durch, setze die Distanz zu allen Knoten/Haltestellen die nicht
         // der Startpunkt sind auf unendlich und die Distanz zum Startpunkt 0
         for(int i = 0; i < V.size(); i++){
 
             if(V.get(i).getId() == start.getId()){
-                distance.set(i, 0);
+                V.get(i).setDistance_to_route_startpoint(0);
             }
             else{
-                distance.set(i,Integer.MAX_VALUE);
+                // Interger.Max_Value darf ich hier nicht nehmen weil später eine distanz dazuaddiert wird.
+                V.get(i).setDistance_to_route_startpoint(1000000);
             }
 
             // Kein Knoten hat einen Vorgänger
-            vorgänger.set(i,null);
+            V.get(i).setVorgänger(null);
         }
 
         // Für jeden Knoten
-        for(int j = 0; j < V.size()-1; j++){
-            // gehe alle Kanten durch
-            for(int u = 0; u < V.size(); u++){
-                for(int v = 0; v < V.get(u).getNeighbors().size(); v++){
-                    // Wenn die Entfernung zu einem Knoten kleiner ist als die bisher bekannte Entfernung
-                    if(distance.get(u) + V.get(u).getNeighbors().get(v).getDistance() < distance.get(v)){
+        // gehe alle Kanten durch
+        for(int j = 0; j < V.size()-1; j++)
+            for (int u = 0; u < V.size(); u++) {
+
+                Station NodeU = V.get(u);
+
+                for (int v = 0; v < NodeU.getNeighbors().size(); v++) {
+
+                    // Id des Nachbarn holen
+                    int id = NodeU.getNeighbors().get(v).getId();
+                    Station NodeV = null;
+
+                    // Benachbarte Station holen
+                    for(int k = 0; k < V.size(); k++){
+                       if(V.get(k).getId() == id){
+                           NodeV = V.get(k);
+                       }
+                    }
+
+                    if (NodeU.getDistance_to_route_startpoint() + NodeU.getNeighbors().get(v).getDistance() < NodeV.getDistance_to_route_startpoint()) {
+
                         // Aktualisiere die Entfernung
-                        distance.set(v, distance.get(u) + V.get(u).getNeighbors().get(v).getDistance());
+                        NodeV.setDistance_to_route_startpoint(NodeU.getDistance_to_route_startpoint() + NodeU.getNeighbors().get(v).getDistance());
+
                         // und setze den neuen Vorgänger, die vorhergehende Station
-                        vorgänger.set(v, V.get(u));
+                        NodeV.setVorgänger(NodeU);
                     }
                 }
             }
-        }
 
-        //normalerweise Erfolg nun die Überprüfung ob es negative zyklen gibt. Diese habe ich erstmal weggelassen,
+        // Normalerweise Erfolgt im Bellman-Ford Alg. nun die Überprüfung ob es negative Zyklen/Kreise gibt.
+        // Diese habe ich erstmal weggelassen,
         // weil wir logischerweise keine negativen Kantengewichte haben können.
         // Dies sollte jedoch noch bei der Eingabe abgefangen werden
 
+
+        // Anlegen der Route, fange am Ende an und gehe zum jeweiligen Vorgänger bis die Startstation erreicht ist.
+
+        Station Node = end;
+
+        while(Node.getId() != start.getId()){
+
+            // Füge Vorgänger am Anfang der Arraylist an
+            Route.add(0,Node);
+
+            Node = Node.getVorgänger();
+
+        }
+        // Füge die Startstation hinzu.
+        Route.add(0, start);
 
         return Route;
     }
@@ -83,9 +114,6 @@ public class Main extends Application {
     Station startstation = stations.get(1);
     Station endstation = stations.get(10);
     int kosten = 2;
-
-    // kosten sollten zur bestimmung der Route nicht notwendig sein. ggf anpassen
-    Route net = new Route(stations, kosten);
 
     ArrayList<Station> route = getRoute(startstation, endstation, stations);
 

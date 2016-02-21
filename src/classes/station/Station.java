@@ -16,6 +16,8 @@ public class Station {
     private ArrayList<Neighbor> neighbors;
     private int x;
     private int y;
+    private int distance_to_route_startpoint;
+    private Station vorgänger;
 
 
     /**
@@ -32,6 +34,8 @@ public class Station {
         this.zone = zone;
         this.endStation = endStation;
         this.neighbors = neighbors;
+        this.distance_to_route_startpoint = 0;
+        this.vorgänger = null;
     }
 
 
@@ -100,7 +104,21 @@ public class Station {
         return y;
     }
 
+    public int getDistance_to_route_startpoint(){
+        return this.distance_to_route_startpoint;
+    }
 
+    public void setDistance_to_route_startpoint(int d){
+        this.distance_to_route_startpoint = d;
+    }
+
+    public Station getVorgänger(){
+        return this.vorgänger;
+    }
+
+    public void setVorgänger(Station s){
+        this.vorgänger = s;
+    }
     //endregion getter and setter
 
 }
