@@ -1,5 +1,6 @@
 package main;
 
+import classes.route.Route;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -87,7 +88,7 @@ public class Main extends Application {
     // kosten sollten zur bestimmung der Route nicht notwendig sein. ggf anpassen
     Route net = new Route(stations, kosten);
 
-    ArrayList<Station> route = getRoute(startstation, endstation, stations);
+    //ArrayList<Station> route = getRoute(startstation, endstation, stations);
 
     launch(args);
 

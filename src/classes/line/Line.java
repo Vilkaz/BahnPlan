@@ -1,16 +1,36 @@
 package classes.line;
 
+import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
+
 /**
  * Created by Vilkaz on 17.02.2016.
  */
 public class Line {
-    private int id;
+    private Color color;
+    private int lineNumber;
 
-    public Line(int id){
-        this.id = id;
+
+    public Line() {
     }
 
-    public int getId() {
-        return id;
+    public Line(int lineNumber, Color color) {
+        this.lineNumber = lineNumber;
+        this.color = color;
     }
+
+
+    //region getter and setter
+
+    public Line(int lineNumber){
+        this.lineNumber = lineNumber;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    //endregion getter and setter
+
 }

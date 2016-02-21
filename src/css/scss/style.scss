@@ -1,3 +1,25 @@
+
+$background-color:linen;
+
+$button-background-color:burlywood;
+$button-font-size: 12px;
+$button-font-family : Baskerville;
+
 .contentPane{
-    -fx-background-color: linen;
+    -fx-background-color: $background-color;
+}
+
+.addNewLineBtn{
+  -fx-background-color: $button-background-color;
+  -fx-font-family: $button-font-family;
+  -fx-font-size: $button-font-size;
+  -fx-font-weight: bold;
+}
+
+.line-creator{
+  -fx-background-color: darkgrey;
+}
+
+.station-creator{
+  -fx-background-color: aquamarine;
 }

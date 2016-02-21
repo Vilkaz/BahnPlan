@@ -1,3 +1,22 @@
-.contentPane{
-    -fx-background-color: linen;
+/* line 8, ../scss/style.scss */
+.contentPane {
+  -fx-background-color: linen;
+}
+
+/* line 12, ../scss/style.scss */
+.addNewLineBtn {
+  -fx-background-color: burlywood;
+  -fx-font-family: Baskerville;
+  -fx-font-size: 12px;
+  -fx-font-weight: bold;
+}
+
+/* line 19, ../scss/style.scss */
+.line-creator {
+  -fx-background-color: darkgrey;
+}
+
+/* line 23, ../scss/style.scss */
+.station-creator {
+  -fx-background-color: aquamarine;
 }
