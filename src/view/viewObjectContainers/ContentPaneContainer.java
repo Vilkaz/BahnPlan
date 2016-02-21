@@ -20,6 +20,20 @@ public class ContentPaneContainer {
 
     private ArrayList<Line> lines = new ArrayList<Line>();
 
+    private StationView actualStation;
+
+
+    private Line actualLine;
+
+    public void addStationToLastLine(StationView stationView){
+        ArrayList<Line> lines = this.getLines();
+        lines.get(lines.size()-1).addStationView(stationView);
+    }
+
+    public void addActualStationToActualLine(){
+        this.actualLine.addStationView(this.getActualStation());
+    }
+
     public ArrayList<Integer> getUsedLineNumbers() {
         ArrayList<Integer> lineNumbers = new ArrayList<>();
         for (Line line : this.getLines()) {
@@ -52,6 +66,23 @@ public class ContentPaneContainer {
     }
 
     //region getter and setter
+
+
+    public Line getActualLine() {
+        return actualLine;
+    }
+
+    public void setActualLine(Line actualLine) {
+        this.actualLine = actualLine;
+    }
+
+    public StationView getActualStation() {
+        return actualStation;
+    }
+
+    public void setActualStation(StationView actualStation) {
+        this.actualStation = actualStation;
+    }
 
     public ArrayList<StationView> getStations() {
         return stations;

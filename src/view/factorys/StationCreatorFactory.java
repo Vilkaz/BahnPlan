@@ -33,6 +33,7 @@ public class StationCreatorFactory {
         for (int i = minZone; i<=maxZone; i++){
             zoneChoser.getItems().add(i);
         }
+        zoneChoser.setValue(zoneChoser.getItems().get(0));
         return zoneChoser;
     }
 }

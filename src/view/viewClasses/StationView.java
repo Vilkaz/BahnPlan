@@ -1,6 +1,7 @@
 package view.viewClasses;
 
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -12,10 +13,14 @@ public class StationView {
     double x;
     double y;
     int zone;
+    Color color;
     boolean endstation;
     private Rectangle rectangle;
 
 
+    public StationView(Color color) {
+        this.color = color;
+    }
 
     public StationView(Text name, double x, double y, int zone, boolean endstation, Rectangle rectangle) {
         this.name = name;
@@ -33,6 +38,18 @@ public class StationView {
 
     //region getter and setter
 
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setName(Text name) {
+        this.name = name;
+    }
+
+    public void setRectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
+    }
 
     public void setX(double x) {
         this.x = x;

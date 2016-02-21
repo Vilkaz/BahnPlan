@@ -8,10 +8,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import view.factorys.LineCreatorFactory;
+import view.factorys.RectangleFactory;
 import view.factorys.StationCreatorFactory;
 import view.factorys.StationGenerator;
-import view.factorys.StationViewFactory;
 import view.viewClasses.StationView;
 import view.viewObjectContainers.ContentPaneContainer;
 
@@ -89,7 +91,15 @@ public class ViewController {
 
 
     public void renderAll() {
-        renderAllStations();
+        renderAllLines();
+    }
+
+    private void renderAllLines() {
+        for (Line line : contentPaneContainer.getLines()){
+           for (StationView stationView : line.getStations()){
+               renderStationView(stationView);
+           }
+        }
     }
 
     private void renderAllStations() {
@@ -121,27 +131,37 @@ public class ViewController {
             @Override
             public void handle(MouseEvent event) {
                 lineCreator.setVisible(false);
-                addLineToContent(lineCreator);
+                setActualLine(lineCreator);
                 displayMessage("Bitte mit der Maus klicken, wo die Station hinzugefügt sein soll");
-                activateStationCreator(event);
+                // diese StationView hat nur FArbe bisher festgelegt, alles andere ist leer.
+                StationView stationView = new StationView(getLineByLineCreator(lineCreator).getColor());
+                contentPaneContainer.setActualStation(stationView);
+                activateStationCreator();
             }
         });
         return button;
     }
 
-    private void addLineToContent(VBox lineCreator){
+    private void setActualLine(VBox lineCreator){
+        Line line = getLineByLineCreator(lineCreator);
+        contentPaneContainer.setActualLine(line);
+    }
+
+    private Line getLineByLineCreator(VBox lineCreator){
         HBox lineNumberChooserBlock = (HBox) lineCreator.getChildren().get(0);
         ChoiceBox choiceBox = (ChoiceBox) lineNumberChooserBlock.getChildren().get(1);
         ColorPicker colorPicker = (ColorPicker) lineCreator.getChildren().get(1);
         Line line = new Line((int)choiceBox.getValue(),colorPicker.getValue());
-        contentPaneContainer.addLine(line);
+        return  line;
     }
 
 
-    private void activateStationCreator(MouseEvent event){
+    private void activateStationCreator(){
         contentPane.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent event) {
+                contentPaneContainer.getActualStation().setX(event.getSceneX());
+                contentPaneContainer.getActualStation().setY(event.getSceneY());
                 setStationCreatorOnMouseClick(event);
                 renderAll();
             }
@@ -155,8 +175,8 @@ public class ViewController {
                 getStationCreatorNeighborButton(stationCreator),
                 getStationCreatorEndStationButton(stationCreator)
         );
-        stationCreator.setLayoutX(event.getX());
-        stationCreator.setLayoutY(event.getY());
+        stationCreator.setLayoutX(event.getSceneX());
+        stationCreator.setLayoutY(event.getSceneY());
         contentPane.getChildren().add(stationCreator);
         //addStationViewToContentPane(event);
     }
@@ -179,11 +199,25 @@ public class ViewController {
             @Override
             public void handle(MouseEvent event) {
                 stationCreator.setVisible(false);
-                new StationViewFactory().getStationView(stationCreator);
+                putValuesFromStationCreatorIntoStationView(stationCreator);
+                contentPaneContainer.addActualStationToActualLine();
+                contentPaneContainer.addLine(contentPaneContainer.getActualLine());
+                renderAll();
                 setStationOnMouseClick(stationCreator);
             }
         });
         return button;
+    }
+
+    private void putValuesFromStationCreatorIntoStationView(VBox stationCreator) {
+        StationView stationView = contentPaneContainer.getActualStation();
+        TextField nameTextField = (TextField) stationCreator.getChildren().get(0);
+        String name = nameTextField.getText();
+        HBox zoneHBox = (HBox) stationCreator.getChildren().get(1);
+        ChoiceBox zoneChoiceBox = (ChoiceBox) zoneHBox.getChildren().get(1);
+        stationView.setName(new Text(name));
+        stationView.setZone((int)zoneChoiceBox.getValue());
+        stationView.setRectangle(new RectangleFactory().getRectangleByColor(stationView.getColor()));
     }
 
     private void setStationOnMouseClick(VBox stationCreator){
