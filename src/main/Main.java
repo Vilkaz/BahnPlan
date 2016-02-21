@@ -91,6 +91,35 @@ public class Main extends Application {
         return Route;
     }
 
+    private static int calculate_price(ArrayList<Station> route){
+
+        int price = 2;
+
+        if(route.size() == 2){
+            price = 1;
+        }
+        else{
+            int zone = route.get(0).getZone();
+
+            for(int i = 0; i<route.size(); i++){
+
+                if(zone != route.get(i).getZone()){
+
+                    price += 1;
+                    zone = route.get(i).getZone();
+                }
+
+                if(route.get(i).isEndStation()){
+
+                    price += 1;
+                }
+            }
+        }
+
+
+        return price;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("../view/view.fxml"));
@@ -109,15 +138,18 @@ public class Main extends Application {
          * entfernung von 101 zu 102    die gleiche ist wie von 102 zu 101
          * kannst debuger vor dem launch anschmeissen, und dir die variable "stations" im debuger genau anschauen,
          */
-    ArrayList<Station> stations = StationController.getMockupStations();
+        ArrayList<Station> stations = StationController.getMockupStations();
 
-    Station startstation = stations.get(1);
-    Station endstation = stations.get(10);
-    int kosten = 2;
+        Station startstation = stations.get(1);
+        Station endstation = stations.get(10);
 
-    ArrayList<Station> route = getRoute(startstation, endstation, stations);
+        // Route bestimmen mit Hilfe des Bellman-Ford-Algorithmus
+        ArrayList<Station> route = getRoute(startstation, endstation, stations);
 
-    launch(args);
+        // Berechnen der Kosten
+        int price = calculate_price(route);
+
+        launch(args);
 
     }
 
