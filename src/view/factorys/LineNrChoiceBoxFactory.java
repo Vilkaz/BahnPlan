@@ -1,12 +1,10 @@
 package view.factorys;
 
-import classes.line.Line;
 import javafx.scene.control.ChoiceBox;
 import view.defaultValues.GeneralSettings;
 import view.viewObjectContainers.ContentPaneContainer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Vilkaz on 21.02.2016.

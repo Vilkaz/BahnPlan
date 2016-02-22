@@ -18,8 +18,6 @@ public class RectangleFactory {
    private double arcValue = 5;
    private double lineWidth = 2;
 
-
-
     public Rectangle getRectangleByColor(Color color){
         Rectangle rectangle = getBasicRectangle();
         rectangle.setStroke(color);
@@ -30,7 +28,7 @@ public class RectangleFactory {
         final Rectangle rectangle =   new Rectangle(width,width);
         rectangle.setArcHeight(arcValue);
         rectangle.setArcWidth(arcValue);
-        rectangle.setFill(Color.TRANSPARENT);
+        //rectangle.setFill(Color.TRANSPARENT);
         rectangle.setStroke(Color.BLACK);
         rectangle.setStrokeWidth(lineWidth);
         rectangle.setOnMouseDragged(new EventHandler<MouseEvent>() {

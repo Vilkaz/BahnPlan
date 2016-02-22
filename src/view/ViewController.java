@@ -1,20 +1,20 @@
 package view;
 
-import classes.line.Line;
+import classes.neighbor.Neighbor;
+import classes.trainLine.TrainLine;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import view.factorys.LineCreatorFactory;
-import view.factorys.RectangleFactory;
-import view.factorys.StationCreatorFactory;
-import view.factorys.StationGenerator;
+import view.factorys.*;
+import view.viewClasses.Coordinates;
 import view.viewClasses.StationView;
 import view.viewObjectContainers.ContentPaneContainer;
 
@@ -24,6 +24,8 @@ import view.viewObjectContainers.ContentPaneContainer;
 public class ViewController {
 
     private ContentPaneContainer contentPaneContainer = new ContentPaneContainer();
+
+    private Line line;
 
     @FXML
     private RadioButton adminBtn, clientBtn;
@@ -58,8 +60,8 @@ public class ViewController {
     }
 
     @FXML
-    public void addNewLine(){
-        VBox lineCreator =  new LineCreatorFactory().getLineCreator(contentPaneContainer);
+    public void addNewLine() {
+        VBox lineCreator = new LineCreatorFactory().getLineCreator(contentPaneContainer);
         lineCreator.setLayoutX(200);
         lineCreator.setLayoutY(50);
         lineCreator.getChildren().addAll(getLineCreatorOKBtn(lineCreator));
@@ -68,7 +70,7 @@ public class ViewController {
     }
 
     private void addStationViewToContentPane(MouseEvent event) {
-        StationView stationView = new StationGenerator().getStationView();
+        StationView stationView = new StationViewFactory().getStationView();
         stationView.setX(event.getX());
         stationView.setY(event.getY());
         contentPaneContainer.addStationView(stationView);
@@ -96,10 +98,10 @@ public class ViewController {
     }
 
     private void renderAllLines() {
-        for (Line line : contentPaneContainer.getLines()){
-           for (StationView stationView : line.getStations()){
-               renderStationView(stationView);
-           }
+        for (TrainLine trainLine : contentPaneContainer.getTrainLines()) {
+            for (StationView stationView : trainLine.getStations()) {
+                renderStationView(stationView);
+            }
         }
     }
 
@@ -126,16 +128,26 @@ public class ViewController {
     }
 
 
-    private Button getLineCreatorOKBtn(final VBox lineCreator){
+    /**
+     * LineCreator gets here an button, which then activates the Station constructor,
+     * and saves the currend line in the container, and makes the line creator dissapear.
+     *
+     * Also the StationID will be generated here. in all next Stept, the Station ID
+     * will be simply incremented.
+     *
+     * @param lineCreator
+     * @return
+     */
+    private Button getLineCreatorOKBtn(final VBox lineCreator) {
         Button button = new Button("weiter");
         button.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                lineCreator.setVisible(false);
+                contentPane.getChildren().remove(lineCreator);
                 setActualLine(lineCreator);
                 displayMessage("Bitte mit der Maus klicken, wo die Station hinzugefügt sein soll");
                 // diese StationView hat nur FArbe bisher festgelegt, alles andere ist leer.
-                StationView stationView = new StationView(getLineByLineCreator(lineCreator).getColor());
+                StationView stationView = new StationView(contentPaneContainer.getActualTrainLine());
                 contentPaneContainer.setActualStation(stationView);
                 activateStationCreator();
             }
@@ -143,34 +155,52 @@ public class ViewController {
         return button;
     }
 
-    private void setActualLine(VBox lineCreator){
-        Line line = getLineByLineCreator(lineCreator);
-        contentPaneContainer.setActualLine(line);
+
+    /**
+     * the Line that is actualy in editing, will be saved underextr avariable,
+     * to get an easy access to it
+     *
+     * @param lineCreator
+     */
+    private void setActualLine(VBox lineCreator) {
+        TrainLine trainLine = getLineByLineCreator(lineCreator);
+        contentPaneContainer.addLine(trainLine);
+        contentPaneContainer.setActualTrainLine(trainLine);
     }
 
-    private Line getLineByLineCreator(VBox lineCreator){
+    private TrainLine getLineByLineCreator(VBox lineCreator) {
         HBox lineNumberChooserBlock = (HBox) lineCreator.getChildren().get(0);
         ChoiceBox choiceBox = (ChoiceBox) lineNumberChooserBlock.getChildren().get(1);
         ColorPicker colorPicker = (ColorPicker) lineCreator.getChildren().get(1);
-        Line line = new Line((int)choiceBox.getValue(),colorPicker.getValue());
-        return  line;
+        TrainLine trainLine = new TrainLine((int) choiceBox.getValue(), colorPicker.getValue());
+        return trainLine;
     }
 
 
-    private void activateStationCreator(){
+    /**
+     * The StationCreator window will popped on mouseclick,
+     * also the click coordinates will be added to actualStation variable
+     * in the container
+     */
+    private void activateStationCreator() {
         contentPane.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent event) {
-                contentPaneContainer.getActualStation().setX(event.getSceneX());
-                contentPaneContainer.getActualStation().setY(event.getSceneY());
+                contentPaneContainer.getActualStation().setX(event.getX());
+                contentPaneContainer.getActualStation().setY(event.getY());
                 setStationCreatorOnMouseClick(event);
-                renderAll();
             }
         });
 
     }
 
-    private void setStationCreatorOnMouseClick(MouseEvent event){
+    /**
+     * StationCreator will be produces here and added to the contentPane
+     * the Buttons will be added from separatly functions,
+     *
+     * @param event
+     */
+    private void setStationCreatorOnMouseClick(MouseEvent event) {
         VBox stationCreator = new StationCreatorFactory().getStationCreator();
         stationCreator.getChildren().addAll(
                 getStationCreatorNeighborButton(stationCreator),
@@ -179,46 +209,121 @@ public class ViewController {
         stationCreator.setLayoutX(event.getSceneX());
         stationCreator.setLayoutY(event.getSceneY());
         contentPane.getChildren().add(stationCreator);
-        //addStationViewToContentPane(event);
     }
 
-    private Button getStationCreatorEndStationButton(final VBox stationCreator){
+    private Button getStationCreatorEndStationButton(final VBox stationCreator) {
         Button button = new Button("Linien Ende");
         button.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 stationCreator.setVisible(false);
-               displayMessage("LINIE ZU ENDE GEBAUT ! ");
+                displayMessage("LINIE ZU ENDE GEBAUT ! ");
             }
         });
         return button;
     }
 
-    private Button getStationCreatorNeighborButton(final VBox stationCreator){
+    /**
+     * IF we clicked on that Button,
+     * are putting values in the "actual" variables
+     *
+     * @param stationCreator
+     * @return
+     */
+    private Button getStationCreatorNeighborButton(final VBox stationCreator) {
         Button button = new Button("Nachbar hinzufügen");
         button.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                stationCreator.setVisible(false);
+                deleteElementFromContentPane(stationCreator);
                 putValuesFromStationCreatorIntoStationView(stationCreator);
-                contentPaneContainer.addActualStationToActualLine();
-                contentPaneContainer.addLine(contentPaneContainer.getActualLine());
-                renderAll();
-                setNeighborToStationView();
-                //setStationOnMouseClick(stationCreator);
+                event.consume();
+                prepareForNeighborStation();
             }
         });
         return button;
     }
 
-    private void setNeighborToStationView(){
-        Polygon connector = new Polygon(50,50,100,100);
-        Rectangle rectangle = contentPaneContainer.getActualStation().getRectangle();
-        //connector.layoutXProperty().bind(rectangle.xProperty());
-        //connector.layoutYProperty().bind(rectangle.yProperty());
-       contentPane.getChildren().add(connector);
-        System.out.println("polygon?");
+
+    /**
+     * the "actual" variables, are put in the PaneContainer
+     */
+    private void prepareForNeighborStation() {
+        renderAll();
+        setNeighborToStationView();
     }
+
+    private void addActualStationToActualLine() {
+        contentPaneContainer.addActualStationToActualLine();
+    }
+
+    private void deleteElementFromContentPane(Node node) {
+        contentPane.getChildren().remove(node);
+    }
+
+    private void setNeighborToStationView() {
+        final Line line = new Line();
+        contentPaneContainer.setLine(line);
+        contentPane.getChildren().add(line);
+        Coordinates startingCoordinates = contentPaneContainer.getActualStation().getRectangleMidleCoordinates();
+        line.setStartX(startingCoordinates.getX());
+        line.setStartY(startingCoordinates.getY());
+        line.setStrokeWidth(10);
+        line.setStroke(contentPaneContainer.getActualTrainLine().getColor());
+        final Rectangle test = contentPaneContainer.getActualStation().getRectangle();
+        contentPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                line.setEndX(event.getX());
+                line.setEndY(event.getY());
+            }
+        });
+
+        contentPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                disableContaintPaneMouseMovedEvent();
+                cloneActualStationViewToPreviouse();
+                setEventCoordinatesToActualStationView(event);
+                addCloneOfActualStationViewToActualLine();
+                setStationCreatorOnMouseClick(event);
+            }
+        });
+    }
+
+    private void addCloneOfActualStationViewToActualLine(){
+        StationView stationView = new StationView(contentPaneContainer.getActualStation());
+        contentPaneContainer.addActualStationToActualLine();
+    }
+
+    private void disableContaintPaneMouseMovedEvent() {
+        contentPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                event.consume();
+            }
+            });
+    }
+
+    private void setEventCoordinatesToActualStationView(MouseEvent event) {
+        this.contentPaneContainer.getActualStation().setX(event.getX());
+        this.contentPaneContainer.getActualStation().setY(event.getY());
+    }
+
+    private void cloneActualStationViewToPreviouse() {
+        this.contentPaneContainer.cloneActualStationViewToPreviouse();
+        setFirstNeighborForActualStation();
+    }
+
+
+
+    private void    setFirstNeighborForActualStation(){
+        contentPaneContainer.getActualStation().setFirstNeighbor(
+                contentPaneContainer.getFirstNeighborForActualStation()
+        );
+    }
+
+
 
     private void putValuesFromStationCreatorIntoStationView(VBox stationCreator) {
         StationView stationView = contentPaneContainer.getActualStation();
@@ -227,11 +332,11 @@ public class ViewController {
         HBox zoneHBox = (HBox) stationCreator.getChildren().get(1);
         ChoiceBox zoneChoiceBox = (ChoiceBox) zoneHBox.getChildren().get(1);
         stationView.setName(new Text(name));
-        stationView.setZone((int)zoneChoiceBox.getValue());
+        stationView.setZone((int) zoneChoiceBox.getValue());
         stationView.setRectangle(new RectangleFactory().getRectangleByColor(stationView.getColor()));
     }
 
-    private void setStationOnMouseClick(VBox stationCreator){
+    private void setStationOnMouseClick(VBox stationCreator) {
         contentPane.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent event) {
@@ -242,8 +347,16 @@ public class ViewController {
     }
 
 
-
     //region getter and setter
+
+
+    public Line getLine() {
+        return line;
+    }
+
+    public void setLine(Line line) {
+        this.line = line;
+    }
 
     public Pane getContentPane() {
         return contentPane;

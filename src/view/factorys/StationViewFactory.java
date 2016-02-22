@@ -1,12 +1,12 @@
 package view.factorys;
 
-import classes.line.Line;
-import javafx.scene.Node;
+import classes.trainLine.TrainLine;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import view.viewClasses.StationView;
 
@@ -16,7 +16,7 @@ import view.viewClasses.StationView;
  */
 public class StationViewFactory {
 
-    public StationView getStationView(VBox stationCreator, MouseEvent event, Line line){
+    public StationView getStationView(VBox stationCreator, MouseEvent event, TrainLine trainLine){
         TextField nameTextField = (TextField) stationCreator.getChildren().get(0);
         String name = nameTextField.getText();
         HBox zoneHBox = (HBox) stationCreator.getChildren().get(1);
@@ -27,7 +27,14 @@ public class StationViewFactory {
                 event.getSceneY(),
                 (int) zoneChoiceBox.getValue(),
                 false,
-                new RectangleFactory().getRectangleByColor(line.getColor()));
+                new RectangleFactory().getRectangleByColor(trainLine.getColor()));
         return stationView;
+    }
+
+    public StationView getStationView(){
+        Text text = new Text("test Station");
+        Rectangle rectangle = new RectangleFactory().getBasicRectangle();
+        StationView stationView = new StationView(text, rectangle);
+        return  stationView;
     }
 }

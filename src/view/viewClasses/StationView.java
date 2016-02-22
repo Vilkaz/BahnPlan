@@ -1,14 +1,20 @@
 package view.viewClasses;
 
+import classes.neighbor.Neighbor;
+import classes.station.Station;
+import classes.trainLine.TrainLine;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+
 /**
  * Created by Vilkaz on 20.02.2016.
  */
 public class StationView {
+    private int id;
     private Text name;
     double x;
     double y;
@@ -16,7 +22,39 @@ public class StationView {
     Color color;
     boolean endstation;
     private Rectangle rectangle;
+    private ArrayList<Neighbor> neighbors = new ArrayList<>();
+    private ArrayList<TrainLine> trainLines = new ArrayList<>();
 
+
+    /**
+     * this constructor will be called when the initial StationView from
+     * LineContsructor data will be initiated.
+     * @param trainLine
+     */
+    public StationView(TrainLine trainLine) {
+        this.color = trainLine.getColor();
+        this.id = trainLine.getLineNumber()*100;
+        addTrainLine(trainLine);
+    }
+
+    public void addTrainLine(TrainLine trainLine){
+        this.getTrainLines().add(trainLine);
+    }
+
+    public StationView(StationView oldStationView){
+        this.id = oldStationView.getId();
+        this.name = oldStationView.getName();
+        this.x = oldStationView.getX();
+        this.y = oldStationView.getY();
+        this.zone = oldStationView.getZone();
+        this.color = oldStationView.getColor();
+        this.neighbors = oldStationView.getNeighbors();
+        this.rectangle = oldStationView.getRectangle();
+    }
+
+    public void addNeighbor(Neighbor neighbor){
+        this.getNeighbors().add((neighbor));
+    }
 
     public StationView(Color color) {
         this.color = color;
@@ -31,13 +69,53 @@ public class StationView {
         this.rectangle = rectangle;
     }
 
+    public int getLastNeighborRange(){
+        return this.getNeighbors().get(getNeighbors().size()-1).getDistance();
+    }
+
     public StationView(Text name, Rectangle rectangle) {
         this.name = name;
         this.rectangle = rectangle;
     }
 
+    public Coordinates getRectangleMidleCoordinates() {
+        double x = this.getX()+5;
+        double y = this.getY()+5;
+        return new Coordinates(x, y);
+    }
+
+    public void setFirstNeighbor(Neighbor neighbor){
+        this.getNeighbors().clear();
+        this.getNeighbors().add(neighbor);
+    }
+
+
     //region getter and setter
 
+
+    public void setNeighbors(ArrayList<Neighbor> neighbors) {
+        this.neighbors = neighbors;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public ArrayList<TrainLine> getTrainLines() {
+        return trainLines;
+    }
+
+    public void setTrainLines(ArrayList<TrainLine> trainLines) {
+        this.trainLines = trainLines;
+    }
+
+    public ArrayList<Neighbor> getNeighbors() {
+        return neighbors;
+    }
 
     public Color getColor() {
         return color;
