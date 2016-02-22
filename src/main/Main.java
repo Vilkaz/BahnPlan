@@ -14,8 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class Main extends Application {
-
-    //@todo getRoute(Start, End, Stationen);
+    
     private static ArrayList<Station> getRoute(Station start, Station end, ArrayList<Station> V){
 
         ArrayList<Station> Route = new ArrayList<Station>();
