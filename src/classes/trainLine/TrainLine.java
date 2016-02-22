@@ -1,4 +1,4 @@
-package classes.line;
+package classes.trainLine;
 
 import javafx.scene.paint.Color;
 import view.viewClasses.StationView;
@@ -8,16 +8,16 @@ import java.util.ArrayList;
 /**
  * Created by Vilkaz on 17.02.2016.
  */
-public class Line {
+public class TrainLine {
     private Color color;
     private int lineNumber;
     private ArrayList<StationView> stations = new ArrayList<StationView>();
 
 
-    public Line() {
+    public TrainLine() {
     }
 
-    public Line(int lineNumber, Color color) {
+    public TrainLine(int lineNumber, Color color) {
         this.lineNumber = lineNumber;
         this.color = color;
     }
@@ -38,7 +38,7 @@ public class Line {
         return color;
     }
 
-    public Line(int lineNumber){
+    public TrainLine(int lineNumber){
         this.lineNumber = lineNumber;
     }
 

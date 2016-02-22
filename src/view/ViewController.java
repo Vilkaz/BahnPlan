@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import view.factorys.LineCreatorFactory;
@@ -203,10 +204,20 @@ public class ViewController {
                 contentPaneContainer.addActualStationToActualLine();
                 contentPaneContainer.addLine(contentPaneContainer.getActualLine());
                 renderAll();
-                setStationOnMouseClick(stationCreator);
+                setNeighborToStationView();
+                //setStationOnMouseClick(stationCreator);
             }
         });
         return button;
+    }
+
+    private void setNeighborToStationView(){
+        Polygon connector = new Polygon(50,50,100,100);
+        Rectangle rectangle = contentPaneContainer.getActualStation().getRectangle();
+        //connector.layoutXProperty().bind(rectangle.xProperty());
+        //connector.layoutYProperty().bind(rectangle.yProperty());
+       contentPane.getChildren().add(connector);
+        System.out.println("polygon?");
     }
 
     private void putValuesFromStationCreatorIntoStationView(VBox stationCreator) {

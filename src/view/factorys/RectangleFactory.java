@@ -1,5 +1,6 @@
 package view.factorys;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
@@ -13,9 +14,9 @@ import javafx.scene.paint.Color;
  */
 public class RectangleFactory {
 
-    double width = new GeneralSettings().getDefaultNodeWidth();
-    double arcValue = 5;
-    double lineWidth = 2;
+   private double width = new GeneralSettings().getDefaultNodeWidth();
+   private double arcValue = 5;
+   private double lineWidth = 2;
 
 
 
@@ -35,8 +36,8 @@ public class RectangleFactory {
         rectangle.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                rectangle.setX(event.getX()-5);
-                rectangle.setY(event.getY()-5);
+                rectangle.setX(event.getX() - 5);
+                rectangle.setY(event.getY() - 5);
             }
         });
         return rectangle;
