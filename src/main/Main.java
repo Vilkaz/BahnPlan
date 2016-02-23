@@ -14,13 +14,13 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class Main extends Application {
-    
+
     private static ArrayList<Station> getRoute(Station start, Station end, ArrayList<Station> V){
 
         ArrayList<Station> Route = new ArrayList<Station>();
 
         // gehe alle Knoten durch, setze die Distanz zu allen Knoten/Haltestellen die nicht
-        // der Startpunkt sind auf unendlich und die Distanz zum Startpunkt 0
+        // der Startpunkt sind auf "unendlich" und die Distanz zum Startpunkt 0
         for(int i = 0; i < V.size(); i++){
 
             if(V.get(i).getId() == start.getId()){
@@ -31,13 +31,14 @@ public class Main extends Application {
                 V.get(i).setDistance_to_route_startpoint(1000000);
             }
 
-            // Kein Knoten hat einen Vorgänger
+            // Keine Station hat einen Vorgänger
             V.get(i).setVorgänger(null);
         }
 
         // Für jeden Knoten
-        // gehe alle Kanten durch
         for(int j = 0; j < V.size()-1; j++)
+
+            // gehe alle Kanten durch
             for (int u = 0; u < V.size(); u++) {
 
                 Station NodeU = V.get(u);
@@ -55,6 +56,7 @@ public class Main extends Application {
                        }
                     }
 
+                    // Prüfe ob die Distanz zu dem Nachbar V kürzer ist als die bisher bekannte Distanz.
                     if (NodeU.getDistance_to_route_startpoint() + NodeU.getNeighbors().get(v).getDistance() < NodeV.getDistance_to_route_startpoint()) {
 
                         // Aktualisiere die Entfernung
@@ -69,11 +71,8 @@ public class Main extends Application {
         // Normalerweise Erfolgt im Bellman-Ford Alg. nun die Überprüfung ob es negative Zyklen/Kreise gibt.
         // Diese habe ich erstmal weggelassen,
         // weil wir logischerweise keine negativen Kantengewichte haben können.
-        // Dies sollte jedoch noch bei der Eingabe abgefangen werden
-
 
         // Anlegen der Route, fange am Ende an und gehe zum jeweiligen Vorgänger bis die Startstation erreicht ist.
-
         Station Node = end;
 
         while(Node.getId() != start.getId()){
