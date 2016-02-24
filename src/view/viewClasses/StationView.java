@@ -4,15 +4,21 @@ import classes.neighbor.Neighbor;
 import classes.station.Station;
 import classes.trainLine.TrainLine;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import view.defaultValues.GeneralSettings;
+import view.factorys.RectangleFactory;
 
 import java.util.ArrayList;
 
 /**
  * Created by Vilkaz on 20.02.2016.
  */
+
+
+
 public class StationView {
     private int id;
     private Text name;
@@ -31,11 +37,22 @@ public class StationView {
      * LineContsructor data will be initiated.
      * @param trainLine
      */
-    public StationView(TrainLine trainLine) {
+    public StationView(TrainLine trainLine, MouseEvent event) {
         this.color = trainLine.getColor();
         this.id = trainLine.getLineNumber()*100;
+        this.rectangle = new RectangleFactory().getRectangleByColor(this.color);
+        int constante = new GeneralSettings().getDefaultStationSymbolWidth();
+        rectangle.setX(event.getSceneX()-constante/2);
+        rectangle.setY(event.getSceneY()-constante);
+        this.name = new Text("");
         addTrainLine(trainLine);
     }
+
+    public StationView() {
+    }
+
+
+
 
     public void addTrainLine(TrainLine trainLine){
         this.getTrainLines().add(trainLine);
@@ -54,6 +71,12 @@ public class StationView {
 
     public void addNeighbor(Neighbor neighbor){
         this.getNeighbors().add((neighbor));
+    }
+
+    public StationView(Coordinates coordinates, Color color) {
+        this.x = coordinates.getX();
+        this.y = coordinates.getY();
+        this.color = color;
     }
 
     public StationView(Color color) {
@@ -79,8 +102,8 @@ public class StationView {
     }
 
     public Coordinates getRectangleMidleCoordinates() {
-        double x = this.getX()+5;
-        double y = this.getY()+5;
+        double x = this.getX()+new GeneralSettings().getDefaultStationSymbolWidth()/2;
+        double y = this.getY()+new GeneralSettings().getDefaultStationSymbolWidth()/2;
         return new Coordinates(x, y);
     }
 
@@ -168,6 +191,7 @@ public class StationView {
     public Rectangle getRectangle() {
         return rectangle;
     }
+
 
 
     //endregion getter and setter
