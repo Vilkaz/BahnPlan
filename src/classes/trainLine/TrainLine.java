@@ -27,6 +27,10 @@ public class TrainLine {
     }
 
 
+    public StationView getLastStationView(){
+        return this.getStations().get(this.getStations().size()-1);
+    }
+
     //region getter and setter
 
 

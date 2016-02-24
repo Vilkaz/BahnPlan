@@ -73,10 +73,21 @@ public class StationView {
         this.getNeighbors().add((neighbor));
     }
 
-    public StationView(Coordinates coordinates, Color color) {
+    public StationView(Coordinates coordinates,TrainLine trainLine) {
+        this.id = getStationViewIDByTrainLine(trainLine);
         this.x = coordinates.getX();
         this.y = coordinates.getY();
-        this.color = color;
+        this.color = trainLine.getColor();
+    }
+
+    private int getStationViewIDByTrainLine(TrainLine trainLine){
+        if (trainLine.getStations().size()==0){
+            return  trainLine.getLineNumber()*100;
+        } else {
+            ArrayList<StationView> stations = trainLine.getStations();
+            int size = stations.size();
+            return stations.get(size-1).getId()+1;
+        }
     }
 
     public StationView(Color color) {

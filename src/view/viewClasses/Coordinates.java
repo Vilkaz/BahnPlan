@@ -22,6 +22,13 @@ public class Coordinates {
         return y;
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
 
-    //endregoin getter and setter
+    public void setY(double y) {
+        this.y = y;
+    }
+
+//endregoin getter and setter
 }

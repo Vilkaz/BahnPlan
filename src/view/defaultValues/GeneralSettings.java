@@ -4,12 +4,17 @@ package view.defaultValues;
  * Created by Vilkaz on 20.02.2016.
  */
 public class GeneralSettings {
-    private double defaultNodeWidth = 20;
-
-    private int minLineNr = 1;
-    private int maxLineNr = 20;
+    // stationView
+    private int defaultStationSymbolWidth = 40;
     private int minZone = 1;
     private int maxZone = 2;
+
+    //tramlines
+    private int minLineNr = 1;
+    private int maxLineNr = 20;
+
+
+
 
     //region getter and setter
 
@@ -26,8 +31,8 @@ public class GeneralSettings {
         return minLineNr;
     }
 
-    public double getDefaultNodeWidth() {
-        return defaultNodeWidth;
+    public int getDefaultStationSymbolWidth() {
+        return defaultStationSymbolWidth;
     }
 
     public int getMaxLineNr() {

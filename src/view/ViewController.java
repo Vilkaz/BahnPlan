@@ -18,6 +18,8 @@ import view.viewClasses.Coordinates;
 import view.viewClasses.StationView;
 import view.viewObjectContainers.ContentPaneContainer;
 
+import java.util.ArrayList;
+
 /**
  * Created by Vilkaz on 19.02.2016.
  */
@@ -64,7 +66,7 @@ public class ViewController {
         VBox lineCreator = new LineCreatorFactory().getLineCreator(contentPaneContainer);
         lineCreator.setLayoutX(200);
         lineCreator.setLayoutY(50);
-        lineCreator.getChildren().addAll(getLineCreatorOKBtn(lineCreator));
+        lineCreator.getChildren().add(getLineCreatorOKBtn(lineCreator));
         contentPane.getChildren().add(lineCreator);
 
     }
@@ -131,7 +133,7 @@ public class ViewController {
     /**
      * LineCreator gets here an button, which then activates the Station constructor,
      * and saves the currend line in the container, and makes the line creator dissapear.
-     *
+     * <p/>
      * Also the StationID will be generated here. in all next Stept, the Station ID
      * will be simply incremented.
      *
@@ -146,13 +148,16 @@ public class ViewController {
                 contentPane.getChildren().remove(lineCreator);
                 setActualLine(lineCreator);
                 displayMessage("Bitte mit der Maus klicken, wo die Station hinzugefügt sein soll");
-                // diese StationView hat nur FArbe bisher festgelegt, alles andere ist leer.
-                StationView stationView = new StationView(contentPaneContainer.getActualTrainLine());
-                contentPaneContainer.setActualStation(stationView);
+                //addStationViewToTramLines(event);
                 activateStationCreator();
             }
         });
         return button;
+    }
+
+    private void addStationViewToTramLines(MouseEvent event) {
+        StationView stationView = new StationView(contentPaneContainer.getActualTrainLine(), event);
+        contentPaneContainer.getTrainLines().get(0).addStationView(stationView);
     }
 
 
@@ -186,8 +191,7 @@ public class ViewController {
         contentPane.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent event) {
-                contentPaneContainer.getActualStation().setX(event.getX());
-                contentPaneContainer.getActualStation().setY(event.getY());
+                saveCoordinates(event.getX(), event.getY());
                 setStationCreatorOnMouseClick(event);
             }
         });
@@ -206,10 +210,11 @@ public class ViewController {
                 getStationCreatorNeighborButton(stationCreator),
                 getStationCreatorEndStationButton(stationCreator)
         );
-        stationCreator.setLayoutX(event.getSceneX());
-        stationCreator.setLayoutY(event.getSceneY());
+        stationCreator.setLayoutX(100);
+        stationCreator.setLayoutY(50);
         contentPane.getChildren().add(stationCreator);
     }
+
 
     private Button getStationCreatorEndStationButton(final VBox stationCreator) {
         Button button = new Button("Linien Ende");
@@ -217,15 +222,59 @@ public class ViewController {
             @Override
             public void handle(MouseEvent event) {
                 stationCreator.setVisible(false);
+                StationView stationView = getActualStationView();
+                putValuesFromStationCreatorIntoStationView(stationCreator, stationView);
+                setNeighborsForStationView(stationView);
+                addStationViewToLastTrainLine(stationView);
+                renderAll();
                 displayMessage("LINIE ZU ENDE GEBAUT ! ");
             }
         });
         return button;
     }
 
+
+    /**
+     * ab dem zweitem Eintrag wird für die vorher eingetragene Station
+     * view, die jetzige Station als nachbar eingetragen.
+     * Und die vorherige Station wird als nachbar für die Jetzige eingetragen.
+     *
+     * @param stationView
+     */
+    private void setNeighborsForStationView(StationView stationView) {
+        if (getLastTrainLine().getStations().size() >0){
+            addActualStationToLastAdded(stationView);
+            addIdFromLastAddedStationAsNeighbor(stationView);
+        }
+    }
+
+
+
+    private void addIdFromLastAddedStationAsNeighbor(StationView stationView) {
+        stationView.addNeighbor(new Neighbor(
+                contentPaneContainer.getLengthFromLine(),
+                getLastTrainLine().getLastStationView().getId()
+        ));
+    }
+
+    private void addActualStationToLastAdded(StationView stationView) {
+        getLastTrainLine().getLastStationView().addNeighbor(
+                new Neighbor(contentPaneContainer.getLengthFromLine(),
+                stationView.getId()
+                )
+        );
+    }
+
+
+    private TrainLine getLastTrainLine() {
+        ArrayList<TrainLine> trainLines = contentPaneContainer.getTrainLines();
+        return trainLines.get(trainLines.size() - 1);
+    }
+
+
     /**
      * IF we clicked on that Button,
-     * are putting values in the "actual" variables
+     * we are putting values in the "actual" variables
      *
      * @param stationCreator
      * @return
@@ -236,65 +285,84 @@ public class ViewController {
             @Override
             public void handle(MouseEvent event) {
                 deleteElementFromContentPane(stationCreator);
-                putValuesFromStationCreatorIntoStationView(stationCreator);
+                StationView stationView = getActualStationView();
+                putValuesFromStationCreatorIntoStationView(stationCreator, stationView);
+                setNeighborsForStationView(stationView);
                 event.consume();
-                prepareForNeighborStation();
+                renderAll();
+                drawNeighborConnector(stationView);
             }
         });
         return button;
     }
 
-
-    /**
-     * the "actual" variables, are put in the PaneContainer
-     */
-    private void prepareForNeighborStation() {
-        renderAll();
-        setNeighborToStationView();
+    private StationView getActualStationView() {
+        StationView stationView = new StationView(
+                contentPaneContainer.getCoordinates(),
+                contentPaneContainer.getActualTrainLine()
+        );
+        return stationView;
     }
 
-    private void addActualStationToActualLine() {
-        contentPaneContainer.addActualStationToActualLine();
-    }
 
     private void deleteElementFromContentPane(Node node) {
         contentPane.getChildren().remove(node);
     }
 
-    private void setNeighborToStationView() {
+    private void drawNeighborConnector(final StationView stationView) {
         final Line line = new Line();
         contentPaneContainer.setLine(line);
         contentPane.getChildren().add(line);
-        Coordinates startingCoordinates = contentPaneContainer.getActualStation().getRectangleMidleCoordinates();
+        Coordinates startingCoordinates = stationView.getRectangleMidleCoordinates();
         line.setStartX(startingCoordinates.getX());
         line.setStartY(startingCoordinates.getY());
-        line.setStrokeWidth(10);
+        line.setStrokeWidth(8);
         line.setStroke(contentPaneContainer.getActualTrainLine().getColor());
-        final Rectangle test = contentPaneContainer.getActualStation().getRectangle();
         contentPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 line.setEndX(event.getX());
                 line.setEndY(event.getY());
+                contentPaneContainer.getCoordinates().setX(event.getX());
+                contentPaneContainer.getCoordinates().setY(event.getY());
             }
         });
 
         contentPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                disableContaintPaneMouseMovedEvent();
-                cloneActualStationViewToPreviouse();
-                setEventCoordinatesToActualStationView(event);
-                addCloneOfActualStationViewToActualLine();
-                setStationCreatorOnMouseClick(event);
+                addStationViewToLastTrainLine(stationView);
+                disableContentPaneClickEvent();
+                addCreatedStationToTramLine(event);
             }
         });
     }
 
-    private void addCloneOfActualStationViewToActualLine(){
-        StationView stationView = new StationView(contentPaneContainer.getActualStation());
-        contentPaneContainer.addActualStationToActualLine();
+    private void addStationViewToLastTrainLine(StationView stationView) {
+        getLastTrainLine().addStationView(stationView);
     }
+
+
+    private void disableContentPaneClickEvent() {
+        contentPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+            }
+        });
+
+        contentPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+            }
+        });
+    }
+
+    private void addCreatedStationToTramLine(MouseEvent event) {
+        saveCoordinates(event.getX(), event.getY());
+        //addCloneOfActualStationViewToActualLine();
+        setStationCreatorOnMouseClick(event);
+    }
+
 
     private void disableContaintPaneMouseMovedEvent() {
         contentPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
@@ -302,38 +370,19 @@ public class ViewController {
             public void handle(MouseEvent event) {
                 event.consume();
             }
-            });
-    }
-
-    private void setEventCoordinatesToActualStationView(MouseEvent event) {
-        this.contentPaneContainer.getActualStation().setX(event.getX());
-        this.contentPaneContainer.getActualStation().setY(event.getY());
-    }
-
-    private void cloneActualStationViewToPreviouse() {
-        this.contentPaneContainer.cloneActualStationViewToPreviouse();
-        setFirstNeighborForActualStation();
+        });
     }
 
 
-
-    private void    setFirstNeighborForActualStation(){
-        contentPaneContainer.getActualStation().setFirstNeighbor(
-                contentPaneContainer.getFirstNeighborForActualStation()
-        );
-    }
-
-
-
-    private void putValuesFromStationCreatorIntoStationView(VBox stationCreator) {
-        StationView stationView = contentPaneContainer.getActualStation();
+    private void putValuesFromStationCreatorIntoStationView(VBox stationCreator, StationView stationView) {
         TextField nameTextField = (TextField) stationCreator.getChildren().get(0);
         String name = nameTextField.getText();
         HBox zoneHBox = (HBox) stationCreator.getChildren().get(1);
         ChoiceBox zoneChoiceBox = (ChoiceBox) zoneHBox.getChildren().get(1);
         stationView.setName(new Text(name));
         stationView.setZone((int) zoneChoiceBox.getValue());
-        stationView.setRectangle(new RectangleFactory().getRectangleByColor(stationView.getColor()));
+        Rectangle rect = new RectangleFactory().getRectangleByColor(stationView.getColor());
+        stationView.setRectangle(rect);
     }
 
     private void setStationOnMouseClick(VBox stationCreator) {
@@ -344,6 +393,18 @@ public class ViewController {
                 renderAll();
             }
         });
+    }
+
+    private void saveCoordinates(double x, double y) {
+        this.contentPaneContainer.setCoordinates(new Coordinates(x, y));
+    }
+
+    private double getX() {
+        return this.contentPaneContainer.getCoordinates().getX();
+    }
+
+    private double getY() {
+        return this.contentPaneContainer.getCoordinates().getY();
     }
 
 
