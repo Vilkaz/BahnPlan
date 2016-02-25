@@ -6,26 +6,29 @@ import javafx.scene.shape.Rectangle;
 import view.defaultValues.GeneralSettings;
 
 import javafx.scene.paint.Color;
+import view.viewClasses.StationView;
 
 
 /**
  * Created by Vilkaz on 20.02.2016.
  */
-public class RectangleFactory {
+public class StationSymbolFactory {
 
-   private double width = new GeneralSettings().getDefaultStationSymbolWidth();
-   private double arcValue = 5;
-   private double lineWidth = 2;
+    private double width = new GeneralSettings().getDefaultStationSymbolWidth();
+    private double arcValue = 5;
+    private double lineWidth = 2;
+    private int stationID;
 
-    public Rectangle getRectangleByColor(Color color){
+    public Rectangle getRectangleByStationView(StationView stationView) {
         Rectangle rectangle = getBasicRectangle();
-        rectangle.setStroke(color);
-        rectangle.setFill(color);
+        rectangle.setId(stationView.getId());
+        rectangle.setStroke(stationView.getColor());
+        rectangle.setFill(stationView.getColor());
         return rectangle;
     }
 
-    public  Rectangle getBasicRectangle(){
-        final Rectangle rectangle =   new Rectangle(width,width);
+    public Rectangle getBasicRectangle() {
+        final Rectangle rectangle = new Rectangle(width, width);
         rectangle.setArcHeight(arcValue);
         rectangle.setArcWidth(arcValue);
         rectangle.setStroke(Color.BLACK);
