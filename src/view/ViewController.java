@@ -2,6 +2,7 @@ package view;
 
 import classes.neighbor.Neighbor;
 import classes.trainLine.TrainLine;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -81,8 +82,26 @@ public class ViewController {
 
 
     @FXML
-    private void editExistingStation(){
+    private void createExistingStationEditor(){
+        VBox stationViewEditor = StationViewEditorFactory.getStationViewEditor();
+        Button editNeighborsBtn = getEditStationsNeighborsBtn(stationViewEditor);
+        stationViewEditor.getChildren().add(editNeighborsBtn);
+        stationViewEditor.setLayoutX(100);
+        stationViewEditor.setLayoutX(100);
+        contentPane.getChildren().add(stationViewEditor);
 
+
+    }
+
+    private Button getEditStationsNeighborsBtn(VBox stationViewEditor){
+        Button button = new Button("Nachbar hinzufügen");
+        button.setOnMouseReleased(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                displayMessage("");
+            }
+        });
+        return  button;
     }
 
     @FXML

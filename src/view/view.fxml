@@ -34,7 +34,7 @@
       <Pane id="contentPane" fx:id="contentPane" prefHeight="550.0" prefWidth="1000.0" styleClass="contentPane">
          <children>
             <Button fx:id="addNewLineBtn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#addNewLine" styleClass="addNewLineBtn" text="Neue Linie hinzufügen" visible="false" />
-            <Button fx:id="editExistingStationBtn" layoutX="203.0" layoutY="14.0" mnemonicParsing="false" onAction="#editExistingStation" text="Vorhandene Station editieren" visible="false" />
+            <Button fx:id="editExistingStationBtn" layoutX="203.0" layoutY="14.0" mnemonicParsing="false" onAction="#createExistingStationEditor" text="Vorhandene Station editieren" visible="false" />
          </children></Pane>
       <Pane id="infoPane" prefHeight="200.0" prefWidth="200.0">
          <children>
