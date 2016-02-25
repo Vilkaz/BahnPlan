@@ -2,10 +2,10 @@ package view.factorys;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Rectangle;
 import view.defaultValues.GeneralSettings;
 
 import javafx.scene.paint.Color;
+import view.viewClasses.MyRectangle;
 import view.viewClasses.StationView;
 
 
@@ -19,27 +19,27 @@ public class StationSymbolFactory {
     private double lineWidth = 2;
     private int stationID;
 
-    public Rectangle getRectangleByStationView(StationView stationView) {
-        Rectangle rectangle = getBasicRectangle();
-        rectangle.setId(stationView.getId());
-        rectangle.setStroke(stationView.getColor());
-        rectangle.setFill(stationView.getColor());
-        return rectangle;
+    public MyRectangle getSymbolByStationView(StationView stationView) {
+        MyRectangle symbol = getBasicSymbol();
+        symbol.setStationId(stationView.getId());
+        symbol.setStroke(stationView.getColor());
+        symbol.setFill(stationView.getColor());
+        return symbol;
     }
 
-    public Rectangle getBasicRectangle() {
-        final Rectangle rectangle = new Rectangle(width, width);
-        rectangle.setArcHeight(arcValue);
-        rectangle.setArcWidth(arcValue);
-        rectangle.setStroke(Color.BLACK);
-        rectangle.setStrokeWidth(lineWidth);
-        rectangle.setOnMouseDragged(new EventHandler<MouseEvent>() {
+    public MyRectangle getBasicSymbol() {
+        final MyRectangle symbol = new MyRectangle(width, width);
+        symbol.setArcHeight(arcValue);
+        symbol.setArcWidth(arcValue);
+        symbol.setStroke(Color.BLACK);
+        symbol.setStrokeWidth(lineWidth);
+        symbol.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                rectangle.setX(event.getX());
-                rectangle.setY(event.getY());
+                symbol.setX(event.getX());
+                symbol.setY(event.getY());
             }
         });
-        return rectangle;
+        return symbol;
     }
 }

@@ -1,15 +1,13 @@
 package view.viewClasses;
 
 import classes.neighbor.Neighbor;
-import classes.station.Station;
 import classes.trainLine.TrainLine;
-import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import view.defaultValues.GeneralSettings;
-import view.factorys.RectangleFactory;
+import view.factorys.StationSymbolFactory;
 
 import java.util.ArrayList;
 
@@ -27,7 +25,7 @@ public class StationView {
     int zone;
     Color color;
     boolean endstation;
-    private Rectangle rectangle;
+    private MyRectangle symbol;
     private ArrayList<Neighbor> neighbors = new ArrayList<>();
     private ArrayList<TrainLine> trainLines = new ArrayList<>();
 
@@ -40,10 +38,10 @@ public class StationView {
     public StationView(TrainLine trainLine, MouseEvent event) {
         this.color = trainLine.getColor();
         this.id = trainLine.getLineNumber()*100;
-        this.rectangle = new RectangleFactory().getRectangleByColor(this.color);
+        this.symbol = new StationSymbolFactory().getSymbolByStationView(this);
         int constante = new GeneralSettings().getDefaultStationSymbolWidth();
-        rectangle.setX(event.getSceneX()-constante/2);
-        rectangle.setY(event.getSceneY()-constante);
+        symbol.setX(event.getSceneX()-constante/2);
+        symbol.setY(event.getSceneY()-constante);
         this.name = new Text("");
         addTrainLine(trainLine);
     }
@@ -66,7 +64,7 @@ public class StationView {
         this.zone = oldStationView.getZone();
         this.color = oldStationView.getColor();
         this.neighbors = oldStationView.getNeighbors();
-        this.rectangle = oldStationView.getRectangle();
+        this.symbol = oldStationView.getSymbol();
     }
 
     public void addNeighbor(Neighbor neighbor){
@@ -94,25 +92,25 @@ public class StationView {
         this.color = color;
     }
 
-    public StationView(Text name, double x, double y, int zone, boolean endstation, Rectangle rectangle) {
+    public StationView(Text name, double x, double y, int zone, boolean endstation, MyRectangle symbol) {
         this.name = name;
         this.x = x;
         this.y = y;
         this.zone = zone;
         this.endstation = endstation;
-        this.rectangle = rectangle;
+        this.symbol = symbol;
     }
 
     public int getLastNeighborRange(){
         return this.getNeighbors().get(getNeighbors().size()-1).getDistance();
     }
 
-    public StationView(Text name, Rectangle rectangle) {
+    public StationView(Text name, MyRectangle symbol) {
         this.name = name;
-        this.rectangle = rectangle;
+        this.symbol = symbol;
     }
 
-    public Coordinates getRectangleMidleCoordinates() {
+    public Coordinates getSymbolMidleCoordinates() {
         double x = this.getX()+new GeneralSettings().getDefaultStationSymbolWidth()/2;
         double y = this.getY()+new GeneralSettings().getDefaultStationSymbolWidth()/2;
         return new Coordinates(x, y);
@@ -123,6 +121,10 @@ public class StationView {
         this.getNeighbors().add(neighbor);
     }
 
+
+    public void getJson(){
+
+    }
 
     //region getter and setter
 
@@ -159,8 +161,8 @@ public class StationView {
         this.name = name;
     }
 
-    public void setRectangle(Rectangle rectangle) {
-        this.rectangle = rectangle;
+    public void setSymbol(MyRectangle symbol) {
+        this.symbol = symbol;
     }
 
     public void setX(double x) {
@@ -199,8 +201,8 @@ public class StationView {
         return endstation;
     }
 
-    public Rectangle getRectangle() {
-        return rectangle;
+    public MyRectangle getSymbol() {
+        return symbol;
     }
 
 

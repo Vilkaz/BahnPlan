@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import view.viewClasses.MyRectangle;
 import view.viewClasses.StationView;
 
 
@@ -27,14 +28,15 @@ public class StationViewFactory {
                 event.getSceneY(),
                 (int) zoneChoiceBox.getValue(),
                 false,
-                new RectangleFactory().getRectangleByColor(trainLine.getColor()));
+                new StationSymbolFactory().getBasicSymbol());
+        stationView.setSymbol(new StationSymbolFactory().getSymbolByStationView(stationView));
         return stationView;
     }
 
     public StationView getStationView(){
         Text text = new Text("test Station");
-        Rectangle rectangle = new RectangleFactory().getBasicRectangle();
-        StationView stationView = new StationView(text, rectangle);
+        MyRectangle symbol = new StationSymbolFactory().getBasicSymbol();
+        StationView stationView = new StationView(text, symbol);
         return  stationView;
     }
 }

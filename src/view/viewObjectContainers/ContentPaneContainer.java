@@ -1,6 +1,5 @@
 package view.viewObjectContainers;
 
-import classes.neighbor.Neighbor;
 import classes.trainLine.TrainLine;
 import javafx.scene.shape.Line;
 import view.viewClasses.Coordinates;
@@ -55,6 +54,8 @@ public class ContentPaneContainer {
         return result;
     }
 
+
+
     public void addStationToLine(int lineNumber) {
 
     }
@@ -73,8 +74,12 @@ public class ContentPaneContainer {
         double y1 = this.line.getStartY();
         double x2 = this.line.getEndX();
         double y2 = this.line.getEndY();
-        double xLength = Math.abs(x1 - x2);
-        double yLength = Math.abs(y1 - y2);
+        return getDistanceBetweenTwoCoordinates(new Coordinates(x1,y1), new Coordinates(x2,y2));
+    }
+
+    public int getDistanceBetweenTwoCoordinates(Coordinates c1, Coordinates c2) {
+        double xLength = Math.abs(c1.getX() - c2.getX());
+        double yLength = Math.abs(c1.getY() - c2.getY());
         double lineLength = Math.sqrt(Math.pow(xLength, 2) + Math.pow(yLength, 2));
         return (int) lineLength;
     }

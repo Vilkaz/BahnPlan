@@ -5,7 +5,10 @@ package view.defaultValues;
  */
 public class GeneralSettings {
     // stationView
+    //rectangle
     private int defaultStationSymbolWidth = 40;
+    private int increaseSizeOnMouseOver = 20;
+
     private int minZone = 1;
     private int maxZone = 2;
 
@@ -18,6 +21,10 @@ public class GeneralSettings {
 
     //region getter and setter
 
+
+    public int getIncreaseSizeOnMouseOver() {
+        return increaseSizeOnMouseOver;
+    }
 
     public int getMinZone() {
         return minZone;
