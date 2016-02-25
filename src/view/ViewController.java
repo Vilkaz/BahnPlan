@@ -39,7 +39,7 @@ public class ViewController {
 
 
     @FXML
-    private Button addNewLineBtn;
+    private Button addNewLineBtn, editExistingStationBtn;
 
     @FXML
     public void startMouseListener() {
@@ -49,14 +49,16 @@ public class ViewController {
 
     @FXML
     public void startAdminMouseListener() {
-        enableAddNewLineBtn();
+        enableAminButtons();
     }
 
-    private void enableAddNewLineBtn() {
+    private void enableAminButtons() {
         addNewLineBtn.setVisible(true);
+        editExistingStationBtn.setVisible(true);
     }
 
-    private void disableAddNewLineBtn() {
+    private void disableAdminButtons() {
+        editExistingStationBtn.setVisible(false);
         addNewLineBtn.setVisible(false);
     }
 
@@ -79,8 +81,13 @@ public class ViewController {
 
 
     @FXML
+    private void editExistingStation(){
+
+    }
+
+    @FXML
     public void startClientMouseListener() {
-        disableAddNewLineBtn();
+        disableAdminButtons();
         contentPane.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
             @Override
             public void handle(javafx.scene.input.MouseEvent event) {
@@ -227,20 +234,26 @@ public class ViewController {
 
     private Button getAddExistingStationViewAsNeighborBtn(final VBox stationCreator) {
         Button button = new Button("Add vorhandene Stattion");
-        contentPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                makeLineFollowMouse(event, line);
-            }
-        });
-
         button.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                stationCreator.setVisible(false);
-                displayMessage("CLICK AUF STATION SYMBOL");
-                for (final MyRectangle symbol : getAllMySymbols()) {
+                contentPane.getChildren().remove(stationCreator);
 
+                final StationView stationView = getActualStationView();
+                putValuesFromStationCreatorIntoStationView(stationCreator, stationView);
+                addStationViewToLastTrainLine(stationView);
+                displayMessage("CLICK AUF STATION SYMBOL");
+                final Line line = getLine(stationView);
+                line.setStrokeWidth(1);
+                contentPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        //contentPane.getChildren().add(line);
+                        makeLineFollowMouse(event, line);
+                    }
+                });
+
+                for (final MyRectangle symbol : getAllMySymbols()) {
                     symbol.setOnMouseEntered(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
@@ -257,10 +270,8 @@ public class ViewController {
                     symbol.setOnMouseReleased(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
-                            StationView stationView = getActualStationView();
-                            putValuesFromStationCreatorIntoStationView(stationCreator, stationView);
-                            addStationViewToLastTrainLine(stationView);
-
+                            disableContaintPaneMouseMovedEvent();
+                            line.setStrokeWidth(new GeneralSettings().getConnectorWidth());
                             StationView prevStation = getPreviousStationView(stationView);
                             setStationViewAsNeighborForLastStation(prevStation);
 
@@ -279,9 +290,9 @@ public class ViewController {
     }
 
 
-    private StationView getPreviousStationView(StationView stationView){
+    private StationView getPreviousStationView(StationView stationView) {
         StationView previousStationView = new StationView();
-        return getStationViewById(stationView.getId()-1);
+        return getStationViewById(stationView.getId() - 1);
     }
 
     private void setStationViewAsNeighborForLastStation(StationView stationView) {
@@ -442,7 +453,7 @@ public class ViewController {
     }
 
     private void drawNeighborConnector(final StationView stationView) {
-        final Line line = drawLine(stationView);
+        final Line line = getLine(stationView);
         contentPane.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -455,13 +466,13 @@ public class ViewController {
     }
 
     private void makeLineFollowMouse(MouseEvent event, Line line) {
-        line.setEndX(event.getX());
-        line.setEndY(event.getY());
+        line.setEndX(event.getX() - 1);
+        line.setEndY(event.getY() - 1);
         contentPaneContainer.getCoordinates().setX(event.getX());
         contentPaneContainer.getCoordinates().setY(event.getY());
     }
 
-    private Line drawLine(StationView stationView) {
+    private Line getLine(StationView stationView) {
         final Line line = new Line();
         contentPaneContainer.setLine(line);
         contentPane.getChildren().add(line);
