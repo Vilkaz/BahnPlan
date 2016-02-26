@@ -5,10 +5,10 @@ import javafx.scene.shape.Rectangle;
 /**
  * Created by vkukanauskas on 25/02/2016.
  */
-public class MyRectangle extends Rectangle {
+public class MySymbol extends Rectangle {
     private int StationId;
 
-    public MyRectangle(double width, double heigth){
+    public MySymbol(double width, double heigth){
         this.setWidth(width);
         this.setHeight(heigth);
     }
